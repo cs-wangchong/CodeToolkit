@@ -1,0 +1,5 @@
+javalang
+numpy
+fasttext
+gensim
+networkx
