@@ -5,10 +5,14 @@ from   os import path
 from   setuptools import setup, find_packages
 import sys
 
-here = path.abspath(path.dirname(__file__))
+print(find_packages())
 
-with open(path.join(here, 'requirements.txt')) as f:
-    reqs = f.read().rstrip().splitlines()
+reqs = [
+    'numpy',
+    'gensim',
+    'nltk',
+    'textdistance[extras]'
+]
 
 # The following reads the variables without doing an "import spiral",
 # because the latter will cause the python execution environment to fail if
@@ -16,7 +20,7 @@ with open(path.join(here, 'requirements.txt')) as f:
 # we're using setup() in the first place.  This code avoids eval, for security.
 
 version = {}
-with open(path.join(here, 'codetoolkit/__version__.py')) as f:
+with open('codetoolkit/__version__.py') as f:
     text = f.read().rstrip().splitlines()
     vars = [line for line in text if line.startswith('__') and '=' in line]
     for v in vars:
@@ -35,27 +39,18 @@ setup(
     # author_email         = version['__email__'],
     license              = version['__license__'],
     keywords             = "program-comprehension code-processing",
-    packages             = ['codetoolkit'],
-    package_data         = {'codetoolkit': [
-                                'spiral/data/frequencies.pklz',
-                                'spiral/data/dictionary.pklz',
-                                'posse/corpus/normal.fields',
-                                'posse/corpus/normal.methods',
-                                'posse/dicts/adjective',
-                                'posse/dicts/adverb',
-                                'posse/dicts/dictionary-allwords',
-                                'posse/dicts/dlist',
-                                'posse/dicts/irregV',
-                                'posse/dicts/n-abbr',
-                                'posse/dicts/norule',
-                                'posse/dicts/noun',
-                                'posse/dicts/participle',
-                                'posse/dicts/preposition',
-                                'posse/dicts/pronoun',
-                                'posse/dicts/quant',
-                                'posse/dicts/verb',
-                            ]},
-    include_package_data = True,
+    packages             = find_packages(),
+    package_dir          = {
+                                'codetoolkit': 'codetoolkit',
+                                'codetoolkit.spiral': 'codetoolkit/spiral',
+                                'codetoolkit.posse': 'codetoolkit/posse',
+                            },
+    package_data         = {
+                                'codetoolkit': ['predicates.txt', 'verb.txt'],
+                                'codetoolkit.spiral': ['data/*'],
+                                'codetoolkit.posse': ['corpus/*', 'dicts/*']
+                            },
+    # include_package_data = True,
     install_requires     = reqs,
     platforms            = 'any',
     python_requires  = '>=3.6',

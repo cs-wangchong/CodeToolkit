@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-
-import re
-from .javalang.tokenizer import JavaToken
 from typing import List
+from .javalang.tokenizer import JavaToken
+
 
 
 class CodeCleaner:
