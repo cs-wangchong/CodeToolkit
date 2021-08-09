@@ -23,10 +23,12 @@ from .delimiter import Delimiter
 MIN_IDENTIFIER = 5
 MAX_IDENTIFIER = 200
 MAX_DISTANCE = 20
-SEQUENCE_LEN = 50
+SEQUENCE_LEN = 30
 SEQ_PER_START = 2
 
-MIN_WORD_COUNT = 10
+MIN_WORD_COUNT = 5
+
+IGNORE_NODES = (Annotation, )
 
 def _build_identifier_graph(tree):
     ## solve member reference and method invocation
@@ -35,14 +37,17 @@ def _build_identifier_graph(tree):
     # print(normalized_idens)
     if not (MIN_IDENTIFIER <= len(normalized_idens) <= MAX_IDENTIFIER):
         return dict()
-    graph = dict()
     paths = list()
     for path, ast_node in tree:
+        if isinstance(ast_node, IGNORE_NODES):
+            continue
         for child in ast_node.children:
             if not (isinstance(child, str) and child in identifiers):
                 continue
             path += (Delimiter.split_camel(child, to_lower=True).replace(" ", "_"), )
+            # print(path)
             paths.append(path)
+    graph = dict()
     for path1, path2 in itertools.combinations(paths, 2):
         iden1, iden2 = path1[-1], path2[-1]
         if iden1 == iden2:
@@ -74,18 +79,18 @@ def _random_walk(graph):
         total_weight = sum(weights)
         probs = [w / total_weight if total_weight > 0 else 1. for w in weights]
         transition_table[u] = neighbours, probs
-    # print(transition_table)
 
-    iden_seqs = list()    
+    iden_seqs = list()   
+    seq_len = min(len(transition_table), SEQUENCE_LEN) 
     for identifier in transition_table:
         for _ in range(SEQ_PER_START):
             seq = list()
             hop = 0
             cur_identifier = identifier
-            while hop < SEQUENCE_LEN:
+            while hop < seq_len:
                 # seq.extend(slicer.slice(cur_identifier))
                 seq.append(cur_identifier)
-                neighbours, probs = transition_table[identifier]
+                neighbours, probs = transition_table[cur_identifier]
                 cur_identifier = np.random.choice(neighbours, 1, probs)[0]
                 hop += 1
             iden_seqs.append(seq)
@@ -111,9 +116,9 @@ def _extract_for_code(code, level="method"):
     for tree in subtrees:
         words = set()
         for seq in _extract_for_subtree(tree):
+            # print(seq)
             delimited_seq = []
             for iden in seq:
-                iden = Delimiter.split_camel(iden, to_lower=True).replace(" ", "_")
                 delimited_seq.append(iden)
                 for word in iden.split("_"):
                     words.add(word)
