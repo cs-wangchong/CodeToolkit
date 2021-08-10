@@ -23,7 +23,7 @@ from .delimiter import Delimiter
 MIN_IDENTIFIER = 5
 MAX_IDENTIFIER = 200
 MAX_DISTANCE = 20
-SEQUENCE_LEN = 30
+SEQUENCE_LEN = 50
 SEQ_PER_START = 2
 
 MIN_WORD_COUNT = 5
@@ -37,34 +37,32 @@ def _build_identifier_graph(tree):
     # print(normalized_idens)
     if not (MIN_IDENTIFIER <= len(normalized_idens) <= MAX_IDENTIFIER):
         return dict()
-    paths = list()
+    leaf2ancestors = defaultdict(dict)
     for path, ast_node in tree:
         if isinstance(ast_node, IGNORE_NODES):
             continue
+        path = (ast_node, ) + tuple(n for n in reversed(path) if isinstance(n, Node))
+        path = path[:MAX_DISTANCE]
         for child in ast_node.children:
             if not (isinstance(child, str) and child in identifiers):
                 continue
-            path += (Delimiter.split_camel(child, to_lower=True).replace(" ", "_"), )
-            # print(path)
-            paths.append(path)
+            leaf = Delimiter.split_camel(child, to_lower=True).replace(" ", "_")
+            for dis, ancestor in enumerate(path, start=1):
+                if ancestor in leaf2ancestors[leaf] and leaf2ancestors[leaf][ancestor] < dis:
+                    continue
+                leaf2ancestors[leaf][ancestor] = dis
+            
     graph = dict()
-    for path1, path2 in itertools.combinations(paths, 2):
-        iden1, iden2 = path1[-1], path2[-1]
-        if iden1 == iden2:
+    for leaf1, leaf2 in itertools.combinations(leaf2ancestors.keys(), 2):
+        ancestors1, ancestors2 = leaf2ancestors[leaf1], leaf2ancestors[leaf2]
+        common_ancestors = set(ancestors1.keys()) & set(ancestors2.keys())
+        if len(common_ancestors) == 0:
             continue
-        offset = max(max(len(path1), len(path2)) - MAX_DISTANCE, 0)
-        index = 0
-        for i, (ele1, ele2) in enumerate(zip(path1[offset:], path2[offset:])):
-            if ele1 is not ele2:
-                index = i
-                break
-        dis = len(path1[index:]) + len(path2[index:])
+        dis = min(ancestors1[common_anc] + ancestors2[common_anc] for common_anc in common_ancestors)
         if dis > MAX_DISTANCE:
             continue
-        if (iden1, iden2) in graph and dis >= graph[iden1, iden2]:
-            continue
-        graph[iden1, iden2] = dis
-        graph[iden2, iden1] = dis
+        graph[leaf1, leaf2] = dis
+        graph[leaf2, leaf1] = dis
     return graph
 
 def _random_walk(graph):
@@ -121,14 +119,14 @@ def _extract_for_code(code, level="method"):
             for iden in seq:
                 delimited_seq.append(iden)
                 for word in iden.split("_"):
-                    words.add(word)
+                    word2count[word] = word2count[word] + 1
             iden_seqs.append(delimited_seq)
         for word in words:
             word2count[word] = word2count[word] + 1
         
     return iden_seqs, word2count
 
-def generate_corpus(input_file, sequence_file, meta_file, buf_size=1000):
+def generate_corpus(input_file, sequence_file, meta_file, level="method", buf_size=1000):
     with Path(input_file).open("rb") as f:
         codes = pickle.load(f)
     # print("finish loading code.")
@@ -141,7 +139,7 @@ def generate_corpus(input_file, sequence_file, meta_file, buf_size=1000):
         num = 0
         for pid, cid, code in codes:
             num += 1
-            _seqs, _word2count = _extract_for_code(code)
+            _seqs, _word2count = _extract_for_code(code, level=level)
             seqs.extend(_seqs)
             for word, count in _word2count.items():
                 word2count[word] = word2count[word] + count 
@@ -179,9 +177,9 @@ def train(corpus_files, meta_files, emb_path, workers=32):
                 with Path(fname).open("r", encoding="utf-8") as f:
                     sentences = f.readlines()
                     for sent in sentences:
-                        yield re.split(r"\s_", sent.strip())
+                        yield re.split(r"[\s_]", sent.strip())
 
-    fasttext = FastText(sg=1, hs=1, vector_size=100, window=10, min_count=MIN_WORD_COUNT, workers=workers)
+    fasttext = FastText(sg=1, hs=1, vector_size=100, window=15, min_count=MIN_WORD_COUNT, workers=workers)
     fasttext.build_vocab_from_freq(word2count)
     fasttext.train(Corpus(corpus_files), total_examples=seq_num, epochs=5)
     fasttext.wv.save(emb_path)
