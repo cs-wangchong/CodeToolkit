@@ -12,7 +12,8 @@ reqs = [
     'gensim',
     'nltk',
     'textdistance[extras]',
-    'jpype1'
+    'jpype1',
+    'spacy'
 ]
 
 # The following reads the variables without doing an "import spiral",

@@ -4,15 +4,26 @@
 import re
 import functools
 
+import spacy
+
 from .posse.tagger import Tagger
-# from .nlp import NLP
 
 class CodePOS:
     __INSTANCE = None
 
     def __init__(self):
         self.tagger = Tagger()
-        self.secondary_tagger = NLP.get_inst()
+        self.init_secondary_tagger()
+
+    def init_secondary_tagger(self):
+        nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+        hyphen_re = re.compile(r"[A-Za-z\d]+-[A-Za-z\d]+|'[a-z]+|''|id|Id|ID")
+        prefix_re = spacy.util.compile_prefix_regex(nlp.Defaults.prefixes)
+        infix_re = spacy.util.compile_infix_regex(nlp.Defaults.infixes)
+        suffix_re = spacy.util.compile_suffix_regex(nlp.Defaults.suffixes)
+        nlp.tokenizer = spacy.tokenizer.Tokenizer(nlp.vocab, prefix_search=prefix_re.search, infix_finditer=infix_re.finditer,
+                                                suffix_search=suffix_re.search, token_match=hyphen_re.match)
+        self.secondary_tagger = nlp
 
     def __call__(self, method_name):
         return self.tag(method_name)
@@ -95,7 +106,7 @@ class CodePOS:
         # print(name_pos)
         if name_pos is None:
             name_pos = []
-            for token in self.secondary_tagger.parse(method_name):
+            for token in self.secondary_tagger(method_name):
                 word = token.text
                 tag = token.pos_.lower()
                 if tag == "adp":
