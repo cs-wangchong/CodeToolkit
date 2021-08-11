@@ -11,7 +11,8 @@ reqs = [
     'numpy',
     'gensim',
     'nltk',
-    'textdistance[extras]'
+    'textdistance[extras]',
+    'jpype1'
 ]
 
 # The following reads the variables without doing an "import spiral",
@@ -46,7 +47,7 @@ setup(
                                 'codetoolkit.posse': 'codetoolkit/posse',
                             },
     package_data         = {
-                                'codetoolkit': ['predicates.txt', 'verb.txt'],
+                                'codetoolkit': ['predicates.txt', 'verb.txt', 'CodeAnalysis.jar'],
                                 'codetoolkit.spiral': ['data/*'],
                                 'codetoolkit.posse': ['corpus/*', 'dicts/*']
                             },
