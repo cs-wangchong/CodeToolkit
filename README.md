@@ -7,8 +7,8 @@ Based on these tools, we provide following features:
 - AST parsing based on the bug-fixed javalang
 - tokenization for identifier based on the optimized spiral
 - POS (part-of-speech) annotation for identifier based on the re-implemented POSSE
-- phrase segmentation for identifier based on the re-implemented POSSE
+- phrase chunking for identifier based on the re-implemented POSSE
 - abbreviation & synonym relation checking based on heuristics
 - token representation learning for code (code2vec) based on FastText
 - PDG parsing based on the Java analysis tool -- [CodeAnalysis](https://github.com/FudanSELab/CodeAnalysis)
-
+- action unit parsing based on the POS and chunking.
