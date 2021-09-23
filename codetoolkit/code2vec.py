@@ -13,7 +13,7 @@ import traceback
 import re
 
 import numpy as np
-from gensim.models import FastText
+from gensim.models import FastText, Word2Vec
 
 from .javalang.parse import parse
 from .javalang.tree import *
@@ -26,7 +26,7 @@ MAX_DISTANCE = 20
 SEQUENCE_LEN = 50
 SEQ_PER_START = 2
 
-MIN_WORD_COUNT = 5
+MIN_WORD_COUNT = 10
 
 IGNORE_NODES = (Annotation, )
 
@@ -122,8 +122,7 @@ def _extract_for_code(code, level="method"):
                     word2count[word] = word2count[word] + 1
             iden_seqs.append(delimited_seq)
         for word in words:
-            word2count[word] = word2count[word] + 1
-        
+            word2count[word] = word2count[word] + 1      
     return iden_seqs, word2count
 
 def generate_corpus(input_file, sequence_file, meta_file, level="method", buf_size=1000):
@@ -158,7 +157,7 @@ def generate_corpus(input_file, sequence_file, meta_file, level="method", buf_si
     except:
         traceback.print_exc()
 
-def train(corpus_files, meta_files, emb_path, workers=32):
+def train(corpus_files, meta_files, model_path=None, emb_path=None, model="fasttext", vector_size=100, window=15, min_count=MIN_WORD_COUNT, epochs=5, workers=32, fine_tuning=False):
     word2count = defaultdict(int)
     seq_num = 0
     for meta_file in meta_files:
@@ -167,6 +166,7 @@ def train(corpus_files, meta_files, emb_path, workers=32):
         seq_num += _seq_num
         for word, count in _word2count.items():
             word2count[word] = word2count[word] + count
+    logging.info(f"total examples: {seq_num}")
 
     class Corpus:
         def __init__(self, fnames):
@@ -178,10 +178,17 @@ def train(corpus_files, meta_files, emb_path, workers=32):
                     sentences = f.readlines()
                     for sent in sentences:
                         yield re.split(r"[\s_]", sent.strip())
-
-    fasttext = FastText(sg=1, hs=1, vector_size=100, window=15, min_count=MIN_WORD_COUNT, workers=workers)
-    fasttext.build_vocab_from_freq(word2count)
-    fasttext.train(Corpus(corpus_files), total_examples=seq_num, epochs=5)
-    fasttext.wv.save(emb_path)
-    logging.info(f"vocab size: {len(fasttext.wv.key_to_index)}")
+    
+    model_cls = FastText if model == "fasttext" else Word2Vec
+    if fine_tuning and model_path:
+        model = model_cls.load(model_path)
+    else:
+        model = model_cls(sg=1, hs=1, vector_size=vector_size, window=window, min_count=min_count, workers=workers)
+        model.build_vocab_from_freq(word2count)
+    model.train(Corpus(corpus_files), total_examples=seq_num, epochs=epochs)
+    if model_path:
+        model.save(model_path)
+    if emb_path:
+        model.wv.save(emb_path)
+    logging.info(f"vocab size: {len(model.wv.key_to_index)}")
     

@@ -8,6 +8,7 @@ import sys
 print(find_packages())
 
 reqs = [
+    'six',
     'numpy',
     'gensim',
     'nltk',

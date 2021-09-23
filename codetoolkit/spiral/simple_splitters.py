@@ -183,7 +183,7 @@ def elementary_split(identifier):
 # Not-so-safe, not-so-simple splitter.
 # .............................................................................
 
-_exceptions_re = re.compile(r'(' + '|'.join(common_terms_with_numbers) + ')', re.I)
+_exceptions_re = re.compile(r'(' + '|'.join(sorted(common_terms_with_numbers, key=lambda term: len(term), reverse=True)) + ')', re.I)
 _common_suffixes = tuple(common_suffix_numbers)
 
 # This next pattern matches hex numbers, octal numbers, and other numbers, in
