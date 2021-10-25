@@ -5,7 +5,6 @@ from typing import List
 from .javalang.tokenizer import JavaToken
 
 
-
 class CodeCleaner:
     @staticmethod
     def clean_annotation(tokens:List[JavaToken]):

@@ -14,6 +14,8 @@ from .dictionary import PREPOSITIONS
 
 
 class ActionParser:
+    __INSTANCE = None
+
     def __init__(
         self,
         code_pos=CodePOS.get_inst(),
@@ -23,7 +25,7 @@ class ActionParser:
         self.code_chunker = code_chunker
 
     @classmethod
-    def get_instance(cls, *args):
+    def get_inst(cls, *args):
         if cls.__INSTANCE is None:
             cls.__INSTANCE = cls()
         return cls.__INSTANCE
@@ -246,8 +248,8 @@ class ActionParser:
         results = list()
 
         #首先将方法声明主谓宾加入结果集
-        
-        result = self.convert_to_triples(self.parse(clazz_name, method_decl.name, method_params, ret), method_decl.name)[0]
+        action = self.parse_method_declaration(clazz_name, method_decl.name, method_params, ret)
+        result = self.convert_to_triples(action, method_decl.name)[0]
         results.append(result)
         #获取method中的MethodInvocation，并生成相应主谓宾加入结果集
         for _, node in method_decl:
@@ -265,7 +267,7 @@ class ActionParser:
                         invoke_arguments.append(self.deal_invocation(arg))                        
                     if isinstance(arg, Literal):
                         invoke_arguments.append(str(arg.value))
-                action = self.parse(scope, invoke_method, invoke_arguments, ret)
+                action = self.parse_method_declaration(scope, invoke_method, invoke_arguments, ret)
                 desc = self.convert_to_triples(action, invoke_method)
                 if len(desc) > 1:
                     for item in desc:

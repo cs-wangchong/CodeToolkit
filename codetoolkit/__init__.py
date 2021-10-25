@@ -11,3 +11,4 @@ from .pair_checker import PairChecker
 from .dictionary import *
 from .code2vec import *
 from .pdg_parser import PDGParser
+from .verb_helper import VerbHelper

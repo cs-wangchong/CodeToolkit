@@ -45,7 +45,6 @@ class CodeChunker:
     @functools.lru_cache(maxsize=10000)
     def chunk(self, name, *verbs):
         verbs = {Lemmatizer.lemmatize_verb(verb) for verb in verbs}
-        print(verbs)
         words = name.lower().split()
         size = len(words)
         if size == 0:

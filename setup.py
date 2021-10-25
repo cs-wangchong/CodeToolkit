@@ -1,11 +1,16 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
+version = {
+    "__version__"     : '0.1.13',
+    "__title__"       : 'CodeToolkit',
+    "__description__" : 'A toolkit for processing source code',
+    "__license__"     : 'GNU General Public License, version 3.0',
+}
 
 import os
 from   os import path
 from   setuptools import setup, find_packages
 import sys
-
-print(find_packages())
 
 reqs = [
     'six',
@@ -21,14 +26,6 @@ reqs = [
 # because the latter will cause the python execution environment to fail if
 # any dependencies are not already installed -- negating most of the reason
 # we're using setup() in the first place.  This code avoids eval, for security.
-
-version = {}
-with open('codetoolkit/__version__.py') as f:
-    text = f.read().rstrip().splitlines()
-    vars = [line for line in text if line.startswith('__') and '=' in line]
-    for v in vars:
-        setting = v.split('=')
-        version[setting[0].strip()] = setting[1].strip().replace("'", '')
 
 # Finally, define our namesake.
 
@@ -49,7 +46,11 @@ setup(
                                 'codetoolkit.posse': 'codetoolkit/posse',
                             },
     package_data         = {
-                                'codetoolkit': ['predicates.txt', 'verb.txt', 'CodeAnalysis.jar'],
+                                'codetoolkit': [
+                                    'predicates.txt',
+                                    'verb.txt',
+                                    # 'CodeAnalysis.jar'
+                                ],
                                 'codetoolkit.spiral': ['data/*'],
                                 'codetoolkit.posse': ['corpus/*', 'dicts/*']
                             },

@@ -17,12 +17,7 @@ class CodePOS:
 
     def init_secondary_tagger(self):
         nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
-        hyphen_re = re.compile(r"[A-Za-z\d]+-[A-Za-z\d]+|'[a-z]+|''|id|Id|ID")
-        prefix_re = spacy.util.compile_prefix_regex(nlp.Defaults.prefixes)
-        infix_re = spacy.util.compile_infix_regex(nlp.Defaults.infixes)
-        suffix_re = spacy.util.compile_suffix_regex(nlp.Defaults.suffixes)
-        nlp.tokenizer = spacy.tokenizer.Tokenizer(nlp.vocab, prefix_search=prefix_re.search, infix_finditer=infix_re.finditer,
-                                                suffix_search=suffix_re.search, token_match=hyphen_re.match)
+        nlp.tokenizer.token_match = re.compile(r"[A-Za-z\d]+-[A-Za-z\d]+|'[a-z]+|''|id|Id|ID").match
         self.secondary_tagger = nlp
 
     def __call__(self, method_name):
