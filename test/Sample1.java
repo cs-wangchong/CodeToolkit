@@ -5,6 +5,8 @@ class Foo {
     {
         md = MessageDigest.getInstance("MD5");
     }
+
+    @override
     void foo() {
         MessageDigest md = MessageDigest.getInstance("MD5");
         try (InputStream is = Files.newInputStream(Paths.get("file.txt"));
