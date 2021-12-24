@@ -100,11 +100,7 @@ def _extract_for_subtree(tree):
     return iden_seqs
 
 def _extract_for_code(code, level="method"):
-    try:
-        ast = parse(code)
-    except:
-        # logging.error("parse code error")
-        return set(), defaultdict(int)
+    ast = parse(code)
     subtrees = [md for _, md in ast.filter((MethodDeclaration, ConstructorDeclaration))] if level == "method" else [ast]
     if len(subtrees) == 0:
         return set(), defaultdict(int)
@@ -129,33 +125,36 @@ def generate_corpus(input_file, sequence_file, meta_file, level="method", buf_si
     with Path(input_file).open("rb") as f:
         codes = pickle.load(f)
     # print("finish loading code.")
-    try:
-        beg_time = time.time()
-        seqs = list()
-        word2count = defaultdict(int)
-        seq_f = Path(sequence_file).open("w", encoding="utf-8")
-        seq_num = 0
-        num = 0
-        for pid, cid, code in codes:
-            num += 1
+    
+    beg_time = time.time()
+    seqs = list()
+    word2count = defaultdict(int)
+    seq_f = Path(sequence_file).open("w", encoding="utf-8")
+    seq_num = 0
+    num = 0
+    for pid, cid, code in codes:
+        num += 1
+        try:
             _seqs, _word2count = _extract_for_code(code, level=level)
-            seqs.extend(_seqs)
-            for word, count in _word2count.items():
-                word2count[word] = word2count[word] + count 
-            if num % buf_size == 0 or num == len(codes):
-                logging.info(f"processed code: {num}/{len(codes)}, vocab size: {len(word2count)}, cost time: {time.time() - beg_time}s.")
-                seq_f.write("\n".join([" ".join(seq) for seq in seqs]))
-                seq_f.flush()
-                seq_num += len(seqs)
-                seqs.clear()
-            # if len(_seqs) == 0:
-            #     print(code)
-            # break
-        seq_f.close()
-        with Path(meta_file).open("wb") as f:
-            pickle.dump((seq_num, word2count), f)
-    except:
-        traceback.print_exc()
+        except:
+            logging.error(traceback.format_exc())
+            continue
+        seqs.extend(_seqs)
+        for word, count in _word2count.items():
+            word2count[word] = word2count[word] + count 
+        if num % buf_size == 0 or num == len(codes):
+            logging.info(f"processed code: {num}/{len(codes)}, vocab size: {len(word2count)}, cost time: {time.time() - beg_time}s.")
+            seq_f.write("\n".join([" ".join(seq) for seq in seqs]))
+            seq_f.flush()
+            seq_num += len(seqs)
+            seqs.clear()
+        # if len(_seqs) == 0:
+        #     print(code)
+        # break
+    seq_f.close()
+    with Path(meta_file).open("wb") as f:
+        pickle.dump((seq_num, word2count), f)
+    
 
 def train(corpus_files, meta_files, model_path=None, emb_path=None, model="fasttext", vector_size=100, window=15, min_count=MIN_WORD_COUNT, epochs=5, workers=32, fine_tuning=False):
     word2count = defaultdict(int)
