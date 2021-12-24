@@ -100,7 +100,10 @@ def _extract_for_subtree(tree):
     return iden_seqs
 
 def _extract_for_code(code, level="method"):
-    ast = parse(code)
+    try:
+        ast = parse(code)
+    except:
+        return set(), defaultdict(int)
     subtrees = [md for _, md in ast.filter((MethodDeclaration, ConstructorDeclaration))] if level == "method" else [ast]
     if len(subtrees) == 0:
         return set(), defaultdict(int)
