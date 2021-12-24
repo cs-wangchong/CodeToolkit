@@ -703,7 +703,6 @@ class Parser(object):
         while True:
             annotation = self.parse_annotation()
             annotations.append(annotation)
-
             if not self.is_annotation():
                 break
 
@@ -846,7 +845,6 @@ class Parser(object):
         begin_token = self.tokens.look()
         modifiers, annotations, javadoc = self.parse_modifiers()
         member = None
-
         token = self.tokens.look()
         if self.try_accept('void'):
             method_name = self.parse_identifier()
@@ -1396,7 +1394,6 @@ class Parser(object):
 
             elif self.is_annotation(i):
                 found_annotations = True
-
                 i += 2
                 while self.tokens.look(i).value == '.':
                     i += 2
@@ -1407,6 +1404,8 @@ class Parser(object):
 
                     while parens > 0:
                         token = self.tokens.look(i)
+                        if isinstance(token, EndOfInput):
+                            self.illegal("Unexpected end of input when parsing annotation")
                         if token.value == '(':
                             parens += 1
                         elif token.value == ')':
