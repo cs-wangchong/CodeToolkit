@@ -134,16 +134,6 @@ import os
 import re
 import sys
 
-# NOTE: to turn on debugging, make sure python -O was *not* used to start
-# python, then set the logging level to DEBUG *before* loading this module.
-# Conversely, to optimize out all the debugging code, use python -O or -OO
-# and everything inside "if __debug__" blocks will be entirely compiled out.
-if __debug__:
-    import logging
-    logging.basicConfig(level = logging.INFO)
-    logger = logging.getLogger('Ronin')
-    def log(s, *other_args): logger.debug('Ronin: ' + s.format(*other_args))
-
 try:
     sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 except:
@@ -360,11 +350,8 @@ class Ronin(object):
         An optimization utility is included in the Spiral source code
         distribution, to help find parameter values for the above.
         '''
-        if __debug__: log('init()')
         if not self._frequencies:
             if not frequencies:
-                if __debug__: log('... loading frequency pickle {}'
-                                  .format(_DEFAULT_FREQ_PICKLE))
                 if os.path.exists(_DEFAULT_FREQ_PICKLE):
                     frequencies = frequencies_from_pickle(_DEFAULT_FREQ_PICKLE)
                 else:
@@ -394,13 +381,10 @@ class Ronin(object):
         self._alt_exponent = alt_exponent
         if not self._dictionary:
             if os.path.exists(_DICTIONARY_PICKLE):
-                if __debug__: log('... loading pickled dictionary {}'
-                                  .format(_DICTIONARY_PICKLE))
                 import gzip, pickle
                 with gzip.open(_DICTIONARY_PICKLE, 'rb') as pickle_file:
                     self._dictionary = pickle.load(pickle_file)
             else:
-                if __debug__: log('... initializing dictionary and stemmer')
                 from nltk.corpus import words as nltk_words
                 from nltk.corpus import wordnet as nltk_wordnet
                 # Note: I also tried adding the words from /usr/share/dict/web,
@@ -434,20 +418,6 @@ class Ronin(object):
                     return self._frequencies[lc_token]
                 return 0
         self._score = score_function
-        if __debug__:
-            log('... frequency table has {} entries', len(self._frequencies))
-            log('... highest frequency = {}', self._highest_freq)
-            log('... dictionary has {} entries', len(self._dictionary))
-            log('... exact_case = {}', self._exact_case)
-            log('... low frequency cutoff = {}', self._low_freq_cutoff)
-            log('... length cutoff = {}', self._length_cutoff)
-            log('... short string min frequency = {}', self._short_min_freq)
-            log('... normal exponent = {}', self._normal_exponent)
-            log('... dictionary word exponent = {}', self._dict_word_exponent)
-            log('... camel bias = {}', self._camel_bias)
-            log('... recognition bias = {}', self._recognition_bias)
-            log('... biased threshold = {}', self._biased_threshold)
-            log('... alt exponent = {}', self._alt_exponent)
 
 
     def split(self, identifier, keep_numbers=True):
@@ -486,26 +456,19 @@ class Ronin(object):
         camel = False
         if not self._frequencies:
             self.init()
-        if __debug__: log('split "{}" (keep num: {})', identifier, keep_numbers)
         initial_list = heuristic_split(identifier, keep_numbers=keep_numbers)
-        if __debug__: log('initial split = {}', initial_list)
         for s in initial_list:
-            if __debug__: log('considering "{}"', s)
             if self._recognized(s):
-                if __debug__: log('"{}" is a recognized token; using it as-is', s)
                 splits = splits + [s]
                 continue
             # Look for upper-to-lower case transitions.
             transition = re.search(r'[A-Z][a-z]', s)
             if not transition:
-                if __debug__: log('no upper-to-lower case transition in {}', s)
                 parts = [s]
             else:
                 i = transition.start(0)
-                if __debug__: log('case transition: {}{}', s[i], s[i+1])
                 camel = s[i:] if i > 0 else s
                 camel_score = self._score(camel)
-                if __debug__: log('"{}" score = {}', camel, camel_score)
                 alt = s[i+1:]
                 # Logically, this next comparison should use the raw_score
                 # rather than the adjusted or rescaled score.  Yet doing that
@@ -516,31 +479,22 @@ class Ronin(object):
                 # the optimization results are clear and consistent.
                 alt_score = self._adjusted_score(alt) * self._camel_bias
                 if camel_score >= alt_score:
-                    if __debug__: log('"{}" >= {} ==> include uppercase letter',
-                                      camel_score, alt_score)
                     parts = [s[0:i], s[i:]] if i > 0 else [s]
                 else:
-                    if __debug__: log("\"{}\" < {} ==> don't include uppercase letter",
-                                      camel_score, alt_score)
                     parts = [s[0:i+1], s[i+1:]]
-                if __debug__: log('split outcome: {}', parts)
             splits = splits + parts
 
         results = []
         for token in splits:
             score = self._adjusted_score(token)
             results = results + self._same_case_split(token, score)[1]
-        if __debug__: log('final results: {}', results)
         return results
 
 
     def _same_case_split(self, s, score_ns = .0000005, level = 0):
         # Returns a tuple of (max_score, split).
         # 'level' is to detect recursive calls, and also indent debug output.
-        if __debug__: sp = ' '*(3*level)
-        if __debug__: log('{}same_case_split "{}", th {:.3f}', sp, s, score_ns)
         if self._recognized(s):
-            if __debug__: log('{}recognized "{}" -- returning as-is', sp, s)
             return (score_ns, [s])
         new_split = None
         max_index = len(s) - 1
@@ -554,7 +508,6 @@ class Ronin(object):
             prefix = self._is_prefix(left) or (len(s) > 5 and self._is_suffix(right))
 
             if prefix:
-                if __debug__: log('{}"{}" or "{}" is pref/suf', sp, left, right)
                 continue
 
             score_l = self._adjusted_score(left)
@@ -563,63 +516,39 @@ class Ronin(object):
             break_l = score_l > threshold
             either_score = max(score_l, score_r)
 
-            if __debug__: log('{}|{} : {}| score l = {:.3f} r = {:.3f}'
-                              ' split l:r = {:1b}:{:1b} prfx = {:1b}:{:1b}'
-                              ' th = {:.3f} max_s = {:.3f}',
-                              sp, left, right, score_l, score_r,
-                              break_l, break_r, self._is_prefix(left),
-                              self._is_suffix(right), threshold, max_score)
-
             if break_l and break_r:
-                if __debug__: log('{}case 1 -- both sides', sp)
                 if (score_l + score_r) > max_score:
-                    if __debug__: log('{}({} + {}) > {}', sp, score_l, score_r, max_score)
                     max_score = score_l + score_r
                     new_split = [left, right]
                     insort(splits, (max_score, new_split))
-                    if __debug__: log('{}case 1: split {}', sp, new_split)
-                else:
-                    if __debug__: log('{}case 1: no split', sp)
             elif break_l:
                 if (either_score > self._biased_threshold and self._recognized(right)):
-                    if __debug__: log('{}case 2 prefer "{}"', sp, right)
                     insort(splits, (either_score, [left, right]))
                 else:
-                    if __debug__: log('{}case 3 -- recursive call on "{}"', sp, right)
                     ts, tmp = self._same_case_split(right, score_ns, level + 1)
                     if tmp[0] != right:
                         new_split = [left] + tmp
                         insort(splits, (ts/len(new_split), new_split))
-                        if __debug__: log('{}case 3: split result {}', sp, tmp)
                     elif self._special_case(right):
                         max_score = either_score
                         insort(splits, (either_score, [left, right]))
-                        if __debug__: log('{}case 3: recognized "{}"', sp, right)
-                    else:
-                        if __debug__: log('{}case 3: no split', sp)
             elif break_r and (self._recognized(left)
                               or len(left) <= self._length_cutoff
                               or self._special_case(right)):
                 if either_score > self._biased_threshold:
-                    if __debug__: log('{}case 4: score {:.3f}', sp, either_score)
                     insort(splits, (score_r/len(left), [left, right]))
                 elif self._recognized(right):
-                    if __debug__: log('{}case 5: recognized "{}"', sp, right)
                     insort(splits, (score_r, [left, right]))
 
-        if __debug__: log('{}done looking for splits', sp)
         if splits:
             alt_score, alt_split = splits[-1]
             scaled_score = alt_score/math.pow(len(alt_split), self._alt_exponent)
             if scaled_score >= score_ns:
-                if __debug__: log('{}using alt split {}', sp, alt_score)
                 result = splits[-1]
             else:
-                if __debug__: log('{}using original {}', sp, s)
                 result = (score_ns, [s])
         else:
             result = (max_score, [s])
-        if __debug__: log('{}returning {}', sp, result)
         return result
 
 

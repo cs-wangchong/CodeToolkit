@@ -113,16 +113,6 @@ import os
 import re
 import sys
 
-# NOTE: to turn on debugging, make sure python -O was *not* used to start
-# python, then set the logging level to DEBUG *before* loading this module.
-# Conversely, to optimize out all the debugging code, use python -O or -OO
-# and everything inside "if __debug__" blocks will be entirely compiled out.
-if __debug__:
-    import logging
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger('samurai')
-    def log(s, *other_args): logger.debug('samurai: ' + s.format(*other_args))
-
 try:
     sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 except:
@@ -167,7 +157,6 @@ class Samurai(object):
         etc.  Similarly, 'glocal_freq' should be a dictionary for global
         frequencies of all terms in a large sample of code bases.
         '''
-        if __debug__: log('init_samurai()')
         if local_freq:
             self._local_freq = local_freq
         if global_freq:
@@ -196,7 +185,6 @@ class Samurai(object):
         frequencies.
         '''
         splits = []
-        if __debug__: log('splitting {}', identifier)
         if not self._global_freq:
             self.init()
         score = self._generate_scoring_function()
@@ -204,45 +192,32 @@ class Samurai(object):
             # Look for upper-to-lower case transitions
             transition = re.search(r'[A-Z][a-z]', s)
             if not transition:
-                if __debug__: log('no upper-to-lower case transition in {}', s)
                 parts = [s]
             else:
                 i = transition.start(0)
-                if __debug__: log('case transition: {}{}', s[i], s[i+1])
                 if i > 0:
                     camel_score = score(s[i:])
-                    if __debug__: log('"{}" score {}', s[i:], camel_score)
                 else:
                     camel_score = score(s)
-                    if __debug__: log('"{}" score {}', s, camel_score)
                 alt = s[i+1:]
                 alt_score = score(alt)
-                if __debug__: log('"{}" alt score {}', alt, alt_score)
                 if camel_score > math.sqrt(alt_score):
-                    if __debug__: log('{} > {} ==> better to include uppercase letter',
-                                      camel_score, math.sqrt(alt_score))
                     if i > 0:
                         parts = [s[0:i], s[i:]]
                     else:
                         parts = [s]
                 else:
-                    if __debug__: log('not better to include uppercase letter')
                     parts = [s[0:i+1], s[i+1:]]
-                if __debug__: log('split outcome: {}', parts)
             splits = splits + parts
 
-        if __debug__: log('turning over to _same_case_split: {}', splits)
         results = []
         for token in splits:
-            if __debug__: log('splitting {}', token)
             results = results + self._same_case_split(token, score, score(token))
-        if __debug__: log('final results: {}', results)
         return results
 
 
     def _same_case_split(self, s, score, score_ns=0.0000005):
         if len(s) < 2:
-            if __debug__: log('"{}" cannot be split; returning as-is', s)
             return [s]
 
         split     = None
@@ -250,7 +225,6 @@ class Samurai(object):
         i         = 0
         max_score = -1
         threshold = max(score(s), score_ns)
-        if __debug__: log('_same_case_split on {}, threshold {}', s, threshold)
         while i < n:
             left       = s[0:i]
             right      = s[i:n]
@@ -260,31 +234,16 @@ class Samurai(object):
             to_split_l = math.sqrt(score_l) > threshold
             to_split_r = math.sqrt(score_r) > threshold
 
-            if __debug__: log('|{} : {}| l = {} r = {} split_l = {:1b} split_r'
-                              ' = {:1b} prefix = {:1b} threshold = {} max_score = {}',
-                              left, right, math.sqrt(score_l), math.sqrt(score_r),
-                              to_split_l, to_split_r, prefix, threshold, max_score)
-
             if not prefix and to_split_l and to_split_r:
-                if __debug__: log('--> case 1')
                 if (score_l + score_r) > max_score:
-                    if __debug__: log('({} + {}) > {}', score_l, score_r, max_score)
                     max_score = score_l + score_r
                     split = [left, right]
-                    if __debug__: log('case 1 split result: {}', split)
-                else:
-                    if __debug__: log('no split for case 1')
             elif not prefix and to_split_l:
-                if __debug__: log('--> case 2 -- recursive call on "{}"', s[i:n])
                 tmp = self._same_case_split(right, score, score_ns)
                 if tmp[0] != right:
                     split = [left] + tmp
-                    if __debug__: log('case 2 split result: {}', split)
-                else:
-                    if __debug__: log('no split for case 2')
             i += 1
         result = split if split else [s]
-        if __debug__: log('<-- returning {}', result)
         return result
 
 
