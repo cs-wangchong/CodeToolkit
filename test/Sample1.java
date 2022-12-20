@@ -1,11 +1,7 @@
 // verify file
 
 class Foo {
-    MessageDigest md;
-    {
-        md = MessageDigest.getInstance("MD5");
-    }
-
+    
     @override
     void foo() {
         MessageDigest md = MessageDigest.getInstance("MD5");

@@ -74,11 +74,18 @@ if __name__ == "__main__":
         vecs2 = [code2vec.get_vector(w) for w in words2]
         vec1 = sum(vecs1) / len(vecs1)
         vec2 = sum(vecs2) / len(vecs2)
-        print(sum(vec1), sum(vec2))
+        # print(sum(vec1), sum(vec2))
         cos = np.dot(vec1, vec2) / np.linalg.norm(vec1) / np.linalg.norm(vec2)
         return cos / 2 + 0.5
 
-    code2vec: FastTextKeyedVectors = FastTextKeyedVectors.load("/home/Data/CodeToolkit/code2vec/emb-classlevel.bin")
+    def pair_cos(code2vec, pair1, pair2):
+        vec1 = code2vec.get_vector(pair1[0]) - code2vec.get_vector(pair1[1])
+        vec2 = code2vec.get_vector(pair2[0]) - code2vec.get_vector(pair2[1])
+        # print(sum(vec1), sum(vec2))
+        cos = np.dot(vec1, vec2) / np.linalg.norm(vec1) / np.linalg.norm(vec2)
+        return cos / 2 + 0.5
+
+    code2vec: FastTextKeyedVectors = FastTextKeyedVectors.load("/home/Data/ResOpMining/CodeSearchData/code_search_emb-methodlevel.bin")
 
     # print(code2vec.most_similar("md5sum", topn=100))
     # print(code2vec.most_similar("md5", topn=100))
@@ -100,12 +107,13 @@ if __name__ == "__main__":
     # print("md5" in code2vec)
     # for word, sim in code2vec.most_similar("md5sum", topn=100000):
     #     print(word, sim)
-    print(cos(code2vec, "clear", "seset"))
-    print(cos(code2vec, "substr", "substring"))
-    print(cos(code2vec, "rows", "columns"))
-    print(cos(code2vec, "db", "database"))
-    print(cos(code2vec, "md5", "file"))
+    # print(cos(code2vec, "clear", "reset"))
+    # print(cos(code2vec, "substr", "substring"))
+    # print(cos(code2vec, "rows", "columns"))
+    # print(cos(code2vec, "db", "database"))
+    # print(cos(code2vec, "md5", "file"))
     
     # print(cos(code2vec, "rr", "repfdsafsda"))
     # print(cos(code2vec, "x", "y"))
 
+    print(pair_cos(code2vec, ['lock', 'acquire'], ['unlock', 'release']))
