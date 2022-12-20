@@ -5,7 +5,7 @@ import json
 
 import jpype
 
-DEFAULT_JAR = str(Path(__file__).parent / "CodeAnalysis-1.0-SNAPSHOT.jar")
+DEFAULT_JAR = str(Path(__file__).parent / "CodeAnalysis.jar")
 
 class DependencyAnalyzer:
     def __init__(self, jar_path=DEFAULT_JAR):
