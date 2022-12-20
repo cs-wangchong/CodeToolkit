@@ -1,7 +1,7 @@
 #!/usr/bin/env python -O
 
 version = {
-    "__version__"     : '0.2.1',
+    "__version__"     : '0.2.3',
     "__title__"       : 'CodeToolkit',
     "__description__" : 'A toolkit for processing source code',
     "__license__"     : 'GNU General Public License, version 3.0',
@@ -49,7 +49,7 @@ setup(
                                 'codetoolkit': [
                                     'predicates.txt',
                                     'verb.txt',
-                                    'CodeAnalysis-1.0-SNAPSHOT.jar'
+                                    'CodeAnalysis.jar'
                                 ],
                                 'codetoolkit.spiral': ['data/*'],
                                 'codetoolkit.posse': ['corpus/*', 'dicts/*']
