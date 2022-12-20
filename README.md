@@ -10,5 +10,5 @@ Based on these tools, we provide following features:
 - phrase chunking for identifier based on the re-implemented POSSE
 - abbreviation & synonym relation checking based on heuristics
 - token representation learning for code (code2vec) based on FastText
-- PDG parsing based on the Java analysis tool -- [CodeAnalysis](https://github.com/FudanSELab/CodeAnalysis)
+- dependency analysis (CFG and PDG) based on the Java analysis tool -- [CodeAnalysis](https://github.com/FudanSELab/CodeAnalysis)
 - action unit parsing based on the POS and chunking.
