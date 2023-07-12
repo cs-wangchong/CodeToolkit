@@ -6,7 +6,7 @@ import re
 
 import jpype
 
-DEFAULT_JAR = str(Path(__file__).parent / "JavaAnalysis.jar")
+DEFAULT_JAR = str(Path(__file__).parent / "JavaAnalysis-1.0-SNAPSHOT.jar")
 
 class CallGraphAnalyzer:
     def __init__(self, jar_path=DEFAULT_JAR):
