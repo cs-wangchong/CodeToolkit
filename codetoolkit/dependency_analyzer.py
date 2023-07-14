@@ -22,8 +22,8 @@ class DependencyAnalyzer:
 
     def build_cfg(self, code):
         cfgs = self.CFGBuilder.buildWithCode(code)
-        return [json.loads(str(cfg.exportJSON())) for cfg in cfgs]
+        return [json.loads(str(cfg.exportJSON()).replace('\t', '    ')) for cfg in cfgs]
 
     def build_pdg(self, code):
         pdgs = self.PDGBuilder.buildWithCode(code)
-        return [json.loads(str(pdg.exportJSON())) for pdg in pdgs]
+        return [json.loads(str(pdg.exportJSON()).replace('\t', '    ')) for pdg in pdgs]
