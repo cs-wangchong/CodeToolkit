@@ -1,0 +1,18 @@
+digraph CFG {
+  // graph-vertices
+  v1  [label="4:  void foo()"];
+  v2  [label="5:  MessageDigest md = MessageDigest.getInstance('MD5')"];
+  v3  [label="6:  try"];
+  v4  [label="end-try"];
+  v5  [label="10:  finally"];
+  v6  [label="11:  byte[] digest = md.digest()"];
+  v7  [label="end-finally"];
+  // graph-edges
+  v1 -> v2;
+  v2 -> v3;
+  v3 -> v4;
+  v4 -> v5;
+  v5 -> v6;
+  v6 -> v7;
+  // end-of-graph
+}

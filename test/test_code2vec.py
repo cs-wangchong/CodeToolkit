@@ -12,7 +12,7 @@ import itertools
 import numpy as np
 from gensim.models.fasttext import FastTextKeyedVectors
 
-from codetoolkit.code2vec import  _extract_for_code, generate_corpus, train
+from srctoolkit.code2vec import  _extract_for_code, generate_corpus, train
 
 
 if __name__ == "__main__":

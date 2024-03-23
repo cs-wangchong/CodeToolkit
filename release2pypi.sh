@@ -10,4 +10,4 @@ fi
 echo "package project..."
 python setup.py sdist
 echo "start upload..."
-python -m twine upload -u FDSEKG -p FDSEKG#401 dist/*.tar.gz
+python -m twine upload dist/*.tar.gz

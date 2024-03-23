@@ -1,0 +1,15 @@
+digraph CFG {
+  // graph-vertices
+  v1  [label="2:  void f()"];
+  v2  [label="3:  while (a < 1)"];
+  v3  [label="endwhile"];
+  v4  [label="4:  a ++"];
+  v5  [label="6:  a -= 1"];
+  // graph-edges
+  v1 -> v2;
+  v2 -> v3  [label="False"];
+  v2 -> v4  [label="True"];
+  v4 -> v2;
+  v3 -> v5;
+  // end-of-graph
+}

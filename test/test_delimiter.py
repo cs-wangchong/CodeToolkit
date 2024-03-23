@@ -1,7 +1,7 @@
 import logging
 logging.basicConfig(level = logging.DEBUG)
 
-from codetoolkit.delimiter import Delimiter
+from srctoolkit.delimiter import Delimiter
 
 if __name__ == "__main__":
 

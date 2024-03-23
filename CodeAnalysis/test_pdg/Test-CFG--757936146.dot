@@ -1,0 +1,27 @@
+digraph CFG {
+  // graph-vertices
+  v1  [label="2:  boolean hasKey(String key)"];
+  v2  [label="3:  Cursor cur = null"];
+  v3  [label="4:  try"];
+  v4  [label="5:  cur = getDB().getDatabase().rawQuery('SELECT 1 FROM deckVars WHERE key = '' + key + ''', null)"];
+  v5  [label="6:  return cur.moveToNext();"];
+  v6  [label="end-try"];
+  v7  [label="7:  finally"];
+  v8  [label="8:  if (cur != null)"];
+  v9  [label="9:  cur.close()"];
+  v10  [label="endif"];
+  v11  [label="end-finally"];
+  // graph-edges
+  v1 -> v2;
+  v2 -> v3;
+  v3 -> v4;
+  v4 -> v5;
+  v5 -> v6;
+  v6 -> v7;
+  v7 -> v8;
+  v8 -> v9  [label="True"];
+  v8 -> v10  [label="False"];
+  v10 -> v11;
+  v9 -> v10;
+  // end-of-graph
+}

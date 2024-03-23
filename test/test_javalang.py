@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from codetoolkit.javalang.parse import parse
-from codetoolkit.javalang.tree import StatementExpression
+from srctoolkit.javalang.parse import parse
+from srctoolkit.javalang.tree import StatementExpression
 
 if __name__ == "__main__":
     code = '''

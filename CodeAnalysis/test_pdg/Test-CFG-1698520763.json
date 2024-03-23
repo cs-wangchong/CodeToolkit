@@ -1,0 +1,104 @@
+{
+  "directed": true,
+  "multigraph": true,
+  "label": "CFG",
+  "type": "Control Flow Graph (CFG)",
+  "nodes": [
+    {
+      "id": 0,
+      "line": 4,
+      "label": "void foo()"
+    },
+    {
+      "id": 1,
+      "line": 5,
+      "label": "MessageDigest md = MessageDigest.getInstance('MD5')"
+    },
+    {
+      "id": 2,
+      "line": 6,
+      "label": "try"
+    },
+    {
+      "id": 3,
+      "line": 6,
+      "label": "InputStream is = Files.newInputStream(Paths.get('file.txt'))"
+    },
+    {
+      "id": 4,
+      "line": 7,
+      "label": "DigestInputStream dis = new DigestInputStream(is, md)"
+    },
+    {
+      "id": 5,
+      "line": -1,
+      "label": "end-try"
+    },
+    {
+      "id": 6,
+      "line": 11,
+      "label": "finally"
+    },
+    {
+      "id": 7,
+      "line": 12,
+      "label": "byte[] digest = md.digest()"
+    },
+    {
+      "id": 8,
+      "line": -1,
+      "label": "end-finally"
+    }
+  ],
+
+  "edges": [
+    {
+      "id": 0,
+      "source": 0,
+      "target": 1,
+      "label": ""
+    },
+    {
+      "id": 1,
+      "source": 1,
+      "target": 2,
+      "label": ""
+    },
+    {
+      "id": 2,
+      "source": 2,
+      "target": 3,
+      "label": ""
+    },
+    {
+      "id": 3,
+      "source": 3,
+      "target": 4,
+      "label": ""
+    },
+    {
+      "id": 4,
+      "source": 4,
+      "target": 5,
+      "label": ""
+    },
+    {
+      "id": 5,
+      "source": 5,
+      "target": 6,
+      "label": ""
+    },
+    {
+      "id": 6,
+      "source": 6,
+      "target": 7,
+      "label": ""
+    },
+    {
+      "id": 7,
+      "source": 7,
+      "target": 8,
+      "label": ""
+    }
+  ]
+}

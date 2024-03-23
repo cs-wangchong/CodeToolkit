@@ -1,8 +1,8 @@
 #!/usr/bin/env python -O
 
 version = {
-    "__version__"     : '0.2.9',
-    "__title__"       : 'CodeToolkit',
+    "__version__"     : '0.1.1',
+    "__title__"       : 'SrcToolkit',
     "__description__" : 'A toolkit for processing source code',
     "__license__"     : 'GNU General Public License, version 3.0',
 }
@@ -41,18 +41,18 @@ setup(
     keywords             = "program-comprehension code-processing",
     packages             = find_packages(),
     package_dir          = {
-                                'codetoolkit': 'codetoolkit',
-                                'codetoolkit.spiral': 'codetoolkit/spiral',
-                                'codetoolkit.posse': 'codetoolkit/posse',
+                                'srctoolkit': 'srctoolkit',
+                                'srctoolkit.spiral': 'srctoolkit/spiral',
+                                'srctoolkit.posse': 'srctoolkit/posse',
                             },
     package_data         = {
-                                'codetoolkit': [
+                                'srctoolkit': [
                                     'predicates.txt',
                                     'verb.txt',
                                     'JavaAnalysis-1.0-SNAPSHOT.jar'
                                 ],
-                                'codetoolkit.spiral': ['data/*'],
-                                'codetoolkit.posse': ['corpus/*', 'dicts/*']
+                                'srctoolkit.spiral': ['data/*'],
+                                'srctoolkit.posse': ['corpus/*', 'dicts/*']
                             },
     include_package_data = True,
     install_requires     = reqs,

@@ -1,0 +1,66 @@
+digraph AST {
+  // graph-vertices
+  n1  [label="ROOT: ROOT"];
+  n2  [label="IMPORTS"];
+  n3  [label="IMPORT: java.security.MessageDigest"];
+  n4  [label="CLASS"];
+  n5  [label="MODIFIER: public"];
+  n6  [label="NAME: Test"];
+  n7  [label="METHOD"];
+  n8  [label="MODIFIER: public"];
+  n9  [label="RETURN: void"];
+  n10  [label="NAME: foo"];
+  n11  [label="BLOCK"];
+  n12  [label="VAR"];
+  n13  [label="TYPE: MessageDigest"];
+  n14  [label="NAME: md"];
+  n15  [label="INIT: = MessageDigest.getInstance('MD5')"];
+  n16  [label="TRY"];
+  n17  [label="RESOURCES"];
+  n18  [label="VAR"];
+  n19  [label="TYPE: InputStream"];
+  n20  [label="NAME: is"];
+  n21  [label="INIT: = Files.newInputStream(Paths.get('file.txt'))"];
+  n22  [label="VAR"];
+  n23  [label="TYPE: DigestInputStream"];
+  n24  [label="NAME: dis"];
+  n25  [label="INIT: = new DigestInputStream(is, md)"];
+  n26  [label="BLOCK"];
+  n27  [label="FINALLY"];
+  n28  [label="VAR"];
+  n29  [label="TYPE: byte[]"];
+  n30  [label="NAME: digest"];
+  n31  [label="INIT: = md.digest()"];
+  // graph-edges
+  n1 -> n2;
+  n2 -> n3;
+  n1 -> n4;
+  n4 -> n5;
+  n4 -> n6;
+  n4 -> n7;
+  n7 -> n8;
+  n7 -> n9;
+  n7 -> n10;
+  n7 -> n11;
+  n11 -> n12;
+  n12 -> n13;
+  n12 -> n14;
+  n12 -> n15;
+  n11 -> n16;
+  n16 -> n17;
+  n17 -> n18;
+  n18 -> n19;
+  n18 -> n20;
+  n18 -> n21;
+  n17 -> n22;
+  n22 -> n23;
+  n22 -> n24;
+  n22 -> n25;
+  n16 -> n26;
+  n16 -> n27;
+  n27 -> n28;
+  n28 -> n29;
+  n28 -> n30;
+  n28 -> n31;
+  // end-of-graph
+}

@@ -1,0 +1,56 @@
+digraph CFG {
+  // graph-vertices
+  v1  [label="2:  String getCookie(String url)"];
+  v2  [label="3:  String cookie = CookieManager.getInstance().getCookie(url)"];
+  v3  [label="4:  if (cookie == null || cookie.length() == 0)"];
+  v4  [label="5:  Log.v(TAG, 'Book Search cookie was missing or expired')"];
+  v5  [label="endif"];
+  v6  [label="22:  return cookie;"];
+  v7  [label="6:  HttpHead head = new HttpHead(url)"];
+  v8  [label="7:  AndroidHttpClient client = AndroidHttpClient.newInstance(mUserAgent)"];
+  v9  [label="8:  try"];
+  v10  [label="9:  HttpResponse response = client.execute(head)"];
+  v11  [label="10:  if (response.getStatusLine().getStatusCode() == 200)"];
+  v12  [label="11:  Header[] cookies = response.getHeaders('set-cookie')"];
+  v13  [label="endif"];
+  v14  [label="end-try"];
+  v15  [label="18:  catch (IOException e)"];
+  v16  [label="19:  Log.e(TAG, e.toString())"];
+  v17  [label="end-catch"];
+  v18  [label="12:  int x = 0"];
+  v19  [label="12:  for (x < cookies.length)"];
+  v20  [label="endfor"];
+  v21  [label="13:  CookieManager.getInstance().setCookie(url, cookies[x].getValue())"];
+  v22  [label="12:  x++"];
+  v23  [label="15:  CookieSyncManager.getInstance().sync()"];
+  v24  [label="16:  cookie = CookieManager.getInstance().getCookie(url)"];
+  // graph-edges
+  v1 -> v2;
+  v2 -> v3;
+  v3 -> v4  [label="True"];
+  v3 -> v5  [label="False"];
+  v5 -> v6;
+  v4 -> v7;
+  v7 -> v8;
+  v8 -> v9;
+  v9 -> v10;
+  v10 -> v11;
+  v11 -> v12  [label="True"];
+  v11 -> v13  [label="False"];
+  v13 -> v14;
+  v14 -> v15  [label="Throws"];
+  v14 -> v5;
+  v15 -> v16;
+  v16 -> v17;
+  v17 -> v14;
+  v12 -> v18;
+  v18 -> v19;
+  v19 -> v20  [label="False"];
+  v19 -> v21  [label="True"];
+  v21 -> v22;
+  v22 -> v19;
+  v20 -> v23;
+  v23 -> v24;
+  v24 -> v13;
+  // end-of-graph
+}

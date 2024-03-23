@@ -1,0 +1,24 @@
+digraph CFG {
+  // graph-vertices
+  v1  [label="2:  String read(File input)"];
+  v2  [label="3:  char[] chars = new char[(int) (input.length())]"];
+  v3  [label="4:  FileReader in = new FileReader(input)"];
+  v4  [label="5:  try"];
+  v5  [label="6:  in.read(chars)"];
+  v6  [label="end-try:5"];
+  v7  [label="7:  finally"];
+  v8  [label="8:  in.close()"];
+  v9  [label="end-finally:5"];
+  v10  [label="10:  return new String(chars);"];
+  // graph-edges
+  v1 -> v2;
+  v2 -> v3;
+  v3 -> v4;
+  v4 -> v5;
+  v5 -> v6;
+  v6 -> v7;
+  v7 -> v8;
+  v8 -> v9;
+  v9 -> v10;
+  // end-of-graph
+}

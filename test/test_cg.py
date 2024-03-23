@@ -1,4 +1,4 @@
-from codetoolkit.call_graph_analyzer import CallGraphAnalyzer
+from srctoolkit.call_graph_analyzer import CallGraphAnalyzer
 
 if __name__ == '__main__':
     analyzer = CallGraphAnalyzer()

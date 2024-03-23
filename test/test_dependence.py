@@ -1,4 +1,4 @@
-from codetoolkit.dependency_analyzer import DependencyAnalyzer
+from srctoolkit.dependency_analyzer import DependencyAnalyzer
 
 if __name__ == '__main__':
     code  = open("test/Sample1.java", "r").read()

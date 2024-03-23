@@ -1,0 +1,25 @@
+digraph PDG {
+  // graph-vertices
+  v1  [label="4:  void foo()"];
+  v2  [label="5:  MessageDigest md = MessageDigest.getInstance('MD5')"];
+  v3  [label="6:  try"];
+  v4  [label="6:  InputStream is = Files.newInputStream(Paths.get('file.txt'))"];
+  v5  [label="7:  DigestInputStream dis = new DigestInputStream(is, md)"];
+  v6  [label="end-try"];
+  v7  [label="11:  finally"];
+  v8  [label="12:  byte[] digest = md.digest()"];
+  v9  [label="end-finally"];
+  // graph-edges
+  v1 -> v2  [arrowhead=empty, color=gray, style=dashed, label=""];
+  v2 -> v3  [arrowhead=empty, color=gray, style=dashed, label=""];
+  v3 -> v4  [arrowhead=empty, color=gray, style=dashed, label=""];
+  v4 -> v5  [arrowhead=empty, color=gray, style=dashed, label=""];
+  v5 -> v6  [arrowhead=empty, color=gray, style=dashed, label=""];
+  v6 -> v7  [arrowhead=empty, color=gray, style=dashed, label=""];
+  v7 -> v8  [arrowhead=empty, color=gray, style=dashed, label=""];
+  v8 -> v9  [arrowhead=empty, color=gray, style=dashed, label=""];
+   v2 -> v5   [style=bold, label=" md"];
+   v2 -> v8   [style=bold, label=" md"];
+   v4 -> v5   [style=bold, label=" is"];
+  // end-of-graph
+}

@@ -1,0 +1,62 @@
+digraph CFG {
+  // graph-vertices
+  v1  [label="2:  void moveFile(File fromFile, File toFile)"];
+  v2  [label="3:  boolean rename = fromFile.renameTo(toFile)"];
+  v3  [label="4:  if (!rename)"];
+  v4  [label="5:  Log.i('moveFile', 'rename')"];
+  v5  [label="end-if:4"];
+  v6  [label="6:  InputStream ist = null"];
+  v7  [label="7:  OutputStream ost = null"];
+  v8  [label="8:  try"];
+  v9  [label="9:  ist = new FileInputStream(fromFile)"];
+  v10  [label="10:  ost = new FileOutputStream(toFile)"];
+  v11  [label="15:  catch (FileNotFoundException e)"];
+  v12  [label="16:  throw e"];
+  v13  [label="17:  finally"];
+  v14  [label="18:  if (ist != null)"];
+  v15  [label="19:  ist.close()"];
+  v16  [label="end-if:18"];
+  v17  [label="21:  if (ost != null)"];
+  v18  [label="22:  ost.close()"];
+  v19  [label="end-if:21"];
+  v20  [label="end-finally:8"];
+  v21  [label="11:  copyFile(ist, ost)"];
+  v22  [label="12:  if (!fromFile.delete())"];
+  v23  [label="13:  throw new IOException('Failed to delete original file '' + fromFile + ''')"];
+  v24  [label="end-if:12"];
+  v25  [label="end-try:8"];
+  // graph-edges
+  v1 -> v2;
+  v2 -> v3;
+  v3 -> v4  [label="True"];
+  v3 -> v5  [label="False"];
+  v4 -> v6;
+  v6 -> v7;
+  v7 -> v8;
+  v8 -> v9;
+  v9 -> v10;
+  v9 -> v11;
+  v11 -> v12;
+  v12 -> v13;
+  v13 -> v14;
+  v14 -> v15  [label="True"];
+  v14 -> v16  [label="False"];
+  v16 -> v17;
+  v17 -> v18  [label="True"];
+  v17 -> v19  [label="False"];
+  v19 -> v20;
+  v20 -> v5;
+  v18 -> v19;
+  v15 -> v16;
+  v10 -> v21;
+  v10 -> v11;
+  v21 -> v22;
+  v21 -> v11;
+  v22 -> v23  [label="True"];
+  v22 -> v24  [label="False"];
+  v22 -> v11;
+  v24 -> v25;
+  v25 -> v13;
+  v23 -> v11;
+  // end-of-graph
+}

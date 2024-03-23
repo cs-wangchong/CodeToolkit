@@ -1,0 +1,407 @@
+{
+  "directed": true,
+  "label": "AST",
+  "type": "Abstract Syntax Tree (AST)",
+  "nodes": [
+    {
+      "id": 0,
+      "line": 0,
+      "type": "ROOT",
+      "label": "ROOT",
+      "normalized": "ROOT"
+    },
+    {
+      "id": 1,
+      "line": 1,
+      "type": "IMPORTS",
+      "label": "IMPORTS",
+      "normalized": "IMPORTS"
+    },
+    {
+      "id": 2,
+      "line": 1,
+      "type": "IMPORT",
+      "label": "java.security.MessageDigest",
+      "normalized": "java.security.MessageDigest"
+    },
+    {
+      "id": 3,
+      "line": 3,
+      "type": "CLASS",
+      "label": "CLASS",
+      "normalized": "CLASS"
+    },
+    {
+      "id": 4,
+      "line": 3,
+      "type": "MODIFIER",
+      "label": "public",
+      "normalized": "public"
+    },
+    {
+      "id": 5,
+      "line": 3,
+      "type": "NAME",
+      "label": "Test",
+      "normalized": "Test"
+    },
+    {
+      "id": 6,
+      "line": 4,
+      "type": "METHOD",
+      "label": "METHOD",
+      "normalized": "METHOD"
+    },
+    {
+      "id": 7,
+      "line": 4,
+      "type": "MODIFIER",
+      "label": "public",
+      "normalized": "public"
+    },
+    {
+      "id": 8,
+      "line": 4,
+      "type": "RETURN",
+      "label": "void",
+      "normalized": "void"
+    },
+    {
+      "id": 9,
+      "line": 4,
+      "type": "NAME",
+      "label": "foo",
+      "normalized": "$METHOD_1"
+    },
+    {
+      "id": 10,
+      "line": 4,
+      "type": "BLOCK",
+      "label": "BLOCK",
+      "normalized": "BLOCK"
+    },
+    {
+      "id": 11,
+      "line": 5,
+      "type": "VAR",
+      "label": "VAR",
+      "normalized": "VAR"
+    },
+    {
+      "id": 12,
+      "line": 5,
+      "type": "TYPE",
+      "label": "MessageDigest",
+      "normalized": "MessageDigest"
+    },
+    {
+      "id": 13,
+      "line": 5,
+      "type": "NAME",
+      "label": "md",
+      "normalized": "$VARL_1"
+    },
+    {
+      "id": 14,
+      "line": 5,
+      "type": "INIT",
+      "label": "= MessageDigest.getInstance('MD5')",
+      "normalized": "= MessageDigest.getInstance('MD5')"
+    },
+    {
+      "id": 15,
+      "line": 6,
+      "type": "TRY",
+      "label": "TRY",
+      "normalized": "TRY"
+    },
+    {
+      "id": 16,
+      "line": 6,
+      "type": "RESOURCES",
+      "label": "RESOURCES",
+      "normalized": "RESOURCES"
+    },
+    {
+      "id": 17,
+      "line": 6,
+      "type": "VAR",
+      "label": "VAR",
+      "normalized": "VAR"
+    },
+    {
+      "id": 18,
+      "line": 6,
+      "type": "TYPE",
+      "label": "InputStream",
+      "normalized": "InputStream"
+    },
+    {
+      "id": 19,
+      "line": 6,
+      "type": "NAME",
+      "label": "is",
+      "normalized": "$VARL_2"
+    },
+    {
+      "id": 20,
+      "line": 6,
+      "type": "INIT",
+      "label": "= Files.newInputStream(Paths.get('file.txt'))",
+      "normalized": "= Files.newInputStream(Paths.get('file.txt'))"
+    },
+    {
+      "id": 21,
+      "line": 7,
+      "type": "VAR",
+      "label": "VAR",
+      "normalized": "VAR"
+    },
+    {
+      "id": 22,
+      "line": 7,
+      "type": "TYPE",
+      "label": "DigestInputStream",
+      "normalized": "DigestInputStream"
+    },
+    {
+      "id": 23,
+      "line": 7,
+      "type": "NAME",
+      "label": "dis",
+      "normalized": "$VARL_3"
+    },
+    {
+      "id": 24,
+      "line": 7,
+      "type": "INIT",
+      "label": "= new DigestInputStream(is, md)",
+      "normalized": "= ($VARL_2, $VARL_1)"
+    },
+    {
+      "id": 25,
+      "line": 8,
+      "type": "BLOCK",
+      "label": "BLOCK",
+      "normalized": "BLOCK"
+    },
+    {
+      "id": 26,
+      "line": 11,
+      "type": "FINALLY",
+      "label": "FINALLY",
+      "normalized": "FINALLY"
+    },
+    {
+      "id": 27,
+      "line": 12,
+      "type": "VAR",
+      "label": "VAR",
+      "normalized": "VAR"
+    },
+    {
+      "id": 28,
+      "line": 12,
+      "type": "TYPE",
+      "label": "byte[]",
+      "normalized": "byte[]"
+    },
+    {
+      "id": 29,
+      "line": 12,
+      "type": "NAME",
+      "label": "digest",
+      "normalized": "$VARL_4"
+    },
+    {
+      "id": 30,
+      "line": 12,
+      "type": "INIT",
+      "label": "= md.digest()",
+      "normalized": "= $VARL_1.$VARL_4()"
+    }
+  ],
+
+  "edges": [
+    {
+      "id": 0,
+      "source": 0,
+      "target": 1,
+      "label": ""
+    },
+    {
+      "id": 1,
+      "source": 1,
+      "target": 2,
+      "label": ""
+    },
+    {
+      "id": 2,
+      "source": 0,
+      "target": 3,
+      "label": ""
+    },
+    {
+      "id": 3,
+      "source": 3,
+      "target": 4,
+      "label": ""
+    },
+    {
+      "id": 4,
+      "source": 3,
+      "target": 5,
+      "label": ""
+    },
+    {
+      "id": 5,
+      "source": 3,
+      "target": 6,
+      "label": ""
+    },
+    {
+      "id": 6,
+      "source": 6,
+      "target": 7,
+      "label": ""
+    },
+    {
+      "id": 7,
+      "source": 6,
+      "target": 8,
+      "label": ""
+    },
+    {
+      "id": 8,
+      "source": 6,
+      "target": 9,
+      "label": ""
+    },
+    {
+      "id": 9,
+      "source": 6,
+      "target": 10,
+      "label": ""
+    },
+    {
+      "id": 10,
+      "source": 10,
+      "target": 11,
+      "label": ""
+    },
+    {
+      "id": 11,
+      "source": 11,
+      "target": 12,
+      "label": ""
+    },
+    {
+      "id": 12,
+      "source": 11,
+      "target": 13,
+      "label": ""
+    },
+    {
+      "id": 13,
+      "source": 11,
+      "target": 14,
+      "label": ""
+    },
+    {
+      "id": 14,
+      "source": 10,
+      "target": 15,
+      "label": ""
+    },
+    {
+      "id": 15,
+      "source": 15,
+      "target": 16,
+      "label": ""
+    },
+    {
+      "id": 16,
+      "source": 16,
+      "target": 17,
+      "label": ""
+    },
+    {
+      "id": 17,
+      "source": 17,
+      "target": 18,
+      "label": ""
+    },
+    {
+      "id": 18,
+      "source": 17,
+      "target": 19,
+      "label": ""
+    },
+    {
+      "id": 19,
+      "source": 17,
+      "target": 20,
+      "label": ""
+    },
+    {
+      "id": 20,
+      "source": 16,
+      "target": 21,
+      "label": ""
+    },
+    {
+      "id": 21,
+      "source": 21,
+      "target": 22,
+      "label": ""
+    },
+    {
+      "id": 22,
+      "source": 21,
+      "target": 23,
+      "label": ""
+    },
+    {
+      "id": 23,
+      "source": 21,
+      "target": 24,
+      "label": ""
+    },
+    {
+      "id": 24,
+      "source": 15,
+      "target": 25,
+      "label": ""
+    },
+    {
+      "id": 25,
+      "source": 15,
+      "target": 26,
+      "label": ""
+    },
+    {
+      "id": 26,
+      "source": 26,
+      "target": 27,
+      "label": ""
+    },
+    {
+      "id": 27,
+      "source": 27,
+      "target": 28,
+      "label": ""
+    },
+    {
+      "id": 28,
+      "source": 27,
+      "target": 29,
+      "label": ""
+    },
+    {
+      "id": 29,
+      "source": 27,
+      "target": 30,
+      "label": ""
+    }
+  ]
+}

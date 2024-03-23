@@ -1,4 +1,4 @@
-from codetoolkit.pair_checker import PairChecker
+from srctoolkit.pair_checker import PairChecker
 
 
 if __name__ == '__main__':
