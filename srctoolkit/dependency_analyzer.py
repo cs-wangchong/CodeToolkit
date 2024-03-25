@@ -11,8 +11,8 @@ class DependencyAnalyzer:
     def __init__(self, jar_path=DEFAULT_JAR):
         if not jpype.isJVMStarted():
             jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", f"-Djava.class.path={jar_path}")
-        self.CFGBuilder = jpype.JClass('codetoolkit.janalysis.dg.cfg.CFGBuilder')
-        self.PDGBuilder = jpype.JClass('codetoolkit.janalysis.dg.pdg.PDGBuilder')
+        self.CFGBuilder = jpype.JClass('srctoolkit.janalysis.dg.cfg.CFGBuilder')
+        self.PDGBuilder = jpype.JClass('srctoolkit.janalysis.dg.pdg.PDGBuilder')
 
     def __del__(self):
         try:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python -O
 
 version = {
-    "__version__"     : '0.1.1',
+    "__version__"     : '0.1.2',
     "__title__"       : 'SrcToolkit',
     "__description__" : 'A toolkit for processing source code',
     "__license__"     : 'GNU General Public License, version 3.0',

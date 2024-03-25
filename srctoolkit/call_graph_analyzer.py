@@ -11,7 +11,7 @@ DEFAULT_JAR = str(Path(__file__).parent / "JavaAnalysis-1.0-SNAPSHOT.jar")
 class CallGraphAnalyzer:
     def __init__(self, jar_path=DEFAULT_JAR):
         jpype.startJVM(jpype.getDefaultJVMPath(), "-ea", f"-Djava.class.path={jar_path}")
-        self.CGBuilder = jpype.JClass('codetoolkit.janalysis.cg.stat.CallGraphBuilder')
+        self.CGBuilder = jpype.JClass('srctoolkit.janalysis.cg.stat.CallGraphBuilder')
         self.pattern = re.compile(r"(\w):(.*) \((\w)\)(.*)")
 
     def __del__(self):
